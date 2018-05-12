@@ -8,14 +8,12 @@ import numpy as np
 from matplotlib.pyplot import imread
 import pandas as pd
 import os
-import PIL
-from PIL import Image, ImageFilter, ImageFont, ImageDraw, ImageEnhance
+from PIL import Image
 
 #Loads data for specified path.
 def load_data(datapath):
     waldos_train = np.array([np.array(imread(datapath + fname)) 
-        for fname in os.listdir(datapath)])
-    
+        for fname in os.listdir(datapath)])    
     return waldos_train
 
 #params: data for classification purposes
@@ -46,14 +44,6 @@ def prepare_data_classification(
     
     return allwaldos_train_x, allwaldos_train_y
 
-def prepare_data_classification2(raw_data):
-    
-    data = []
-    for im in raw_data:
-        data.append(im.flatten('F'))
-    prepared_data = pd.DataFrame(data)
-    return prepared_data
-
 #params: A picture to be diced by a 64x64 with an overlap of 50%
 #returns: Diced data ready to be tested.
 def slice_picture(pic):
@@ -62,29 +52,28 @@ def slice_picture(pic):
     
     row_overlap = rows + int(rows*0.50)
     column_overlap = columns + int(columns*0.50)
-#    print(rows)
-#    print(columns)
-#    print(row_overlap)
-#    print(column_overlap)
     data = []
     for i in range(0, row_overlap):
         for j in range(0, column_overlap):
             slice_piece = pic[0, 32*i:64+32*i, 32*j:64+32*j]
             data.append(slice_piece.flatten('F'))       
-    
     data = pd.DataFrame(data)
     return data
 
+#params: A picture, the cartesian coordinates for the topmost left
+#       corner and right most corner of a box, and a indicated save spot
+#action: Apply a black and while filter to the picture at the specified
+#       coordinates and then save it
 def blurr(picture, top_left_x, top_left_y,
-          bottom_right_x, bottom_right_y):
+          bottom_right_x, bottom_right_y,
+          save_spot, save_as):
     picture = Image.fromarray(picture, 'RGB')
-#    draw = Image.Draw(picture)   
     cropped_image = picture.crop((top_left_x, top_left_y,
                                   bottom_right_x, bottom_right_y))
     blurred_image = cropped_image.convert('L')
     picture.paste(blurred_image,(top_left_x, top_left_y,
                                  bottom_right_x, bottom_right_y))
-    picture.save("Hey-Waldo/full_fake_picture/pic_copy.jpeg", 'JPEG')
+    picture.save(save_spot, save_as)
     
     
     
