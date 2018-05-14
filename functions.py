@@ -37,8 +37,7 @@ def prepare_data_classification(
     df_y2 = pd.DataFrame(y)
     
     frames_x = [df1, df2]
-    frames_y = [df_y1, df_y2]
-    
+    frames_y = [df_y1, df_y2]    
     allwaldos_train_x = pd.concat(frames_x)
     allwaldos_train_y = pd.concat(frames_y)
     

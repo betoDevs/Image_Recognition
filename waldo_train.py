@@ -26,7 +26,7 @@ joblib.dump(rf, filename)
 
 allwaldos_test, y_test = prepare_data_classification(
         waldos_test, notwaldos_test)
-predicted = rf.predict_proba(allwaldos_test)
+predicted = rf.predict(allwaldos_test)
 print("\nWaldos Prediction")
 print(predicted)
 print("\nActual Waldos")
